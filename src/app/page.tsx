@@ -1,6 +1,4 @@
 import { HydrateClient } from "~/trpc/server";
-import Header from "./_components/header";
-import OfferTab from "./_components/offerTab";
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
@@ -9,10 +7,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <main className="flex min-h-screen flex-col bg-white ">
-        <Header />
-        <OfferTab />
-      </main>
+      <div className="bg-white">home page protected route</div>
     </HydrateClient>
   );
 }

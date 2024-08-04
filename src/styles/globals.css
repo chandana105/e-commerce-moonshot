@@ -7,3 +7,15 @@
 body {
   @apply font-inter;
 }
+
+.label {
+  @apply leading-text-line-height text-base font-normal text-black;
+}
+
+.input-text {
+  @apply border-login-border leading-text-line-height text-input-color border-app-border mb-4 mt-1 w-full rounded-md bg-white text-base font-normal;
+}
+
+.app-button {
+  @apply leading-text-line-height border-app-border my-4 w-full whitespace-nowrap rounded-md border-black bg-black px-[148px] py-[18px] text-center text-base font-medium uppercase tracking-wider text-white;
+}

@@ -1,0 +1,11 @@
+export const SIGN_IN_BUTTON_TEXT = "Login";
+export const SIGN_UP_BUTTON_TEXT = "Create your account";
+export const CREATE_ACCOUNT_BUTTON_TEXT = "Create account";
+export const NEW_ACCOUNT = "Don’t have an Account? ";
+export const ALREADY_REGISTERED = "Have an Account?  ";
+export const SIGN_UP = "Sign up ";
+export const LOGIN = "Login";
+export const SHOW_PASSWORD = "Show";
+export const WELCOME_BACK_TO_ECOMMERCE = "Welcome back to ECOMMERCE";
+export const LOGIN_WELCOME_MESSAGE = "The next gen business marketplace";
+export const LOGIN_BORDER_COLOR = "#C1C1C1";
