@@ -20,9 +20,7 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <Header />
-          <main className="flex min-h-screen flex-col pt-40">
-            {children}
-          </main>
+          <main className="flex min-h-screen flex-col pt-36">{children}</main>
         </TRPCReactProvider>
       </body>
     </html>

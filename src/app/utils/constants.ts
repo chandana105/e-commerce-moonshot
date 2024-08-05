@@ -8,4 +8,7 @@ export const LOGIN = "Login";
 export const SHOW_PASSWORD = "Show";
 export const WELCOME_BACK_TO_ECOMMERCE = "Welcome back to ECOMMERCE";
 export const LOGIN_WELCOME_MESSAGE = "The next gen business marketplace";
-export const LOGIN_BORDER_COLOR = "#C1C1C1";
+export const VERIFY_YOUR_EMAIL = "Verify your email";
+export const VERFIY_HEADING =
+  "Enter the 8 digit code you have received on ";
+export const VERFIY_BUTTON_TEXT = "Verfiy";

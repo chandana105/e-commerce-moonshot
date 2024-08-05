@@ -4,7 +4,7 @@ import OfferTab from "./offerTab";
 
 const Header = () => {
   return (
-    <div className="fixed top-0 left-0 right-0 z-50">
+    <div className="fixed left-0 right-0 top-0 z-50 bg-white">
       <div className="flex h-[100px] w-full flex-col justify-between border-2 px-8 py-3">
         <ul className="flex gap-5 self-end text-sm font-light tracking-wide">
           <li>Help</li>
@@ -12,10 +12,10 @@ const Header = () => {
           <li>Hi, John</li>
         </ul>
         <div className="grid grid-cols-12 items-center gap-10">
-          <h1 className="text-heading leading-heading-line-height col-span-2 font-bold">
+          <h1 className="col-span-2 text-heading font-bold leading-heading-line-height">
             ECOMMERCE
           </h1>
-          <ul className="leading-text-line-height col-span-8 flex justify-center gap-10 self-end text-base font-semibold tracking-wide">
+          <ul className="col-span-8 flex justify-center gap-10 self-end text-base font-semibold leading-text-line-height tracking-wide">
             <li>Categories</li>
             <li>Sale</li>
             <li>Clearance</li>

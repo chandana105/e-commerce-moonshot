@@ -32,18 +32,18 @@ const Authentication = () => {
       <form
         noValidate
         onSubmit={(e) => e.preventDefault()}
-        className="border-login-border border-app-border absolute left-0 right-0 m-8 w-[38%] rounded-[20px] px-14 py-8 text-black md:mx-auto"
+        className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
       >
-        <h1 className="text-heading leading-heading-line-height mb-8 text-center font-semibold">
+        <h1 className="mb-8 text-center text-heading font-semibold leading-heading-line-height">
           {isSignInForm ? SIGN_IN_BUTTON_TEXT : SIGN_UP_BUTTON_TEXT}
         </h1>
 
         {isSignInForm && (
           <div className="mb-5 flex flex-col items-center gap-3 text-black">
-            <h2 className="leading-login-heading-line-height text-2xl font-medium">
+            <h2 className="text-2xl font-medium leading-login-heading-line-height">
               {WELCOME_BACK_TO_ECOMMERCE}
             </h2>
-            <h3 className="leading-text-line-height text-base font-normal">
+            <h3 className="text-base font-normal leading-text-line-height">
               {LOGIN_WELCOME_MESSAGE}
             </h3>
           </div>
@@ -56,7 +56,7 @@ const Authentication = () => {
               ref={fullNameRef}
               type="text"
               placeholder="Enter Name"
-              className="input-text placeholder-input-color p-3"
+              className="input-text p-3 placeholder-input-color"
             />
           </>
         )}
@@ -65,7 +65,7 @@ const Authentication = () => {
           ref={emailRef}
           type="email"
           placeholder="Enter Email Address"
-          className="input-text placeholder-input-color p-3"
+          className="input-text p-3 placeholder-input-color"
         />
 
         <label className="label">Password</label>
@@ -75,10 +75,10 @@ const Authentication = () => {
               ref={passwordRef}
               type={showPassword ? "text" : "password"}
               placeholder="Enter Password"
-              className="placeholder-input-color w-[90%] rounded-l-md p-3"
+              className="w-[90%] rounded-l-md p-3 placeholder-input-color"
             />
             <button
-              className="leading-text-line-height border-b-app-border mx-3 my-auto h-min border-b-black text-base font-normal text-black"
+              className="mx-3 my-auto h-min border-b-app-border border-b-black text-base font-normal leading-text-line-height text-black"
               onClick={toggleShowPassword}
             >
               {SHOW_PASSWORD}
@@ -89,22 +89,20 @@ const Authentication = () => {
             ref={passwordRef}
             type="password"
             placeholder="Enter Password"
-            className="input-text placeholder-input-color p-3"
+            className="input-text p-3 placeholder-input-color"
           />
         )}
 
-        <p className="mb-2 text-xs text-red-600 md:text-sm">
-          {errorMessage || null}
-        </p>
+        <p className="mb-2 text-sm text-red-600">{errorMessage || null}</p>
 
         <button className="app-button" onClick={handleButtonClick}>
           {isSignInForm ? SIGN_IN_BUTTON_TEXT : CREATE_ACCOUNT_BUTTON_TEXT}
         </button>
 
         {isSignInForm && (
-          <div className="bg-login-border mb-2 mt-4 h-[1px] w-full"></div>
+          <div className="mb-2 mt-4 h-[1px] w-full bg-login-border"></div>
         )}
-        <p className="leading-text-line-height text-gray-color my-10 text-center text-base font-normal">
+        <p className="my-10 text-center text-base font-normal leading-text-line-height text-gray-color">
           {isSignInForm ? NEW_ACCOUNT : ALREADY_REGISTERED}
           <span
             className="cursor-pointer text-base font-bold uppercase"
