@@ -6,42 +6,49 @@ import {
   checkSignUpValidations,
 } from "../utils/validation";
 import { api } from "~/trpc/react";
-import { TRPCClientError } from "@trpc/client";
+import { clearFormFields, errorHandler } from "../utils/helpers";
 
 const useAuth = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const fullNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  // Define the mutation hook here
+  //  mutation hooks for signup and login
   const createUser = api.user.create.useMutation({
     onSuccess: async () => {
-      // Clear form fields upon successful user creation
-      if (fullNameRef.current) {
-        fullNameRef.current.value = "";
-      }
-      if (emailRef.current) {
-        emailRef.current.value = "";
-      }
-      if (passwordRef.current) {
-        passwordRef.current.value = "";
-      }
-      setErrorMessage(""); // Clear error message on success
+      clearFormFields({
+        fullNameRef,
+        emailRef,
+        passwordRef,
+      });
+      setErrorMessage("");
     },
     onError: (error) => {
-      // Handle error from server
-      if (error instanceof Error) {
-        setErrorMessage(error.message); // Set error message if it’s a standard Error
-      } else if (error instanceof TRPCClientError) {
-        // TRPC specific error handling
-        setErrorMessage(error.message || "An unexpected error occurred.");
+      errorHandler({ error, setErrorMessage });
+    },
+  });
+
+  const loginUser = api.user.login.useMutation({
+    onSuccess: (data) => {
+      if (data.success && data.token) {
+        localStorage.setItem("authToken", data.token);
+        setErrorMessage("");
+
+        clearFormFields({
+          fullNameRef,
+          emailRef,
+          passwordRef,
+        });
       } else {
-        setErrorMessage("An unexpected error occurred.");
+        setErrorMessage(data.message || "Login failed");
       }
+    },
+    onError: (error) => {
+      errorHandler({ error, setErrorMessage });
     },
   });
 
@@ -74,11 +81,14 @@ const useAuth = () => {
 
     if (message) return; // If there is any validation error, do not proceed further
 
-    console.log("signup");
-
-    if (!isSignInForm) {
-      // Triggering the mutation with the form data
-      // signup
+    if (isSignInForm) {
+      // Triggering the login mutation
+      loginUser.mutate({
+        email: emailValue,
+        password: passwordValue,
+      });
+    } else {
+      // Triggering the signup mutation
       createUser.mutate({
         name: fullNameValue,
         email: emailValue,
