@@ -13,6 +13,7 @@ export default {
         "login-border": "#C1C1C1",
         "input-color": "#848484",
         "gray-color": "#333333",
+        "unchecked-checkbox-color": " #CCCCCC",
       },
       fontSize: {
         heading: "32px",

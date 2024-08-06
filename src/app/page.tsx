@@ -1,4 +1,5 @@
 import { HydrateClient } from "~/trpc/server";
+import Interests from "./_components/interests";
 
 export default async function Home() {
   // const hello = await api.post.hello({ text: "from tRPC" });
@@ -7,7 +8,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <div className="bg-white">home page protected route</div>
+      <Interests />
     </HydrateClient>
   );
 }
