@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
+import useGetUser from "../hooks/useGetUser";
 import {
   ALREADY_REGISTERED,
   CREATE_ACCOUNT_BUTTON_TEXT,
@@ -13,6 +15,7 @@ import {
   SIGN_UP_BUTTON_TEXT,
   WELCOME_BACK_TO_ECOMMERCE,
 } from "../utils/constants";
+import { useEffect } from "react";
 
 const Authentication = () => {
   const {
@@ -26,6 +29,19 @@ const Authentication = () => {
     toggleSignInForm,
     toggleShowPassword,
   } = useAuth();
+
+  const { data, status, error, isLoading } = useGetUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      router.push("/");
+    }
+  }, [isLoading, data, router]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="relative">

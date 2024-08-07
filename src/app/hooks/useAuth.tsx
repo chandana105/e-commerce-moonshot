@@ -7,18 +7,19 @@ import {
 } from "../utils/validation";
 import { api } from "~/trpc/react";
 import { clearFormFields, errorHandler } from "../utils/helpers";
+import { useRouter } from "next/navigation";
 
 const useAuth = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
+  const router = useRouter();
   const fullNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   //  mutation hooks for signup and login
-  const createUser = api.user.create.useMutation({
+  const createUser = api.auth.create.useMutation({
     onSuccess: async () => {
       clearFormFields({
         fullNameRef,
@@ -32,17 +33,17 @@ const useAuth = () => {
     },
   });
 
-  const loginUser = api.user.login.useMutation({
+  const loginUser = api.auth.login.useMutation({
     onSuccess: (data) => {
       if (data.success && data.token) {
         localStorage.setItem("authToken", data.token);
         setErrorMessage("");
-
         clearFormFields({
           fullNameRef,
           emailRef,
           passwordRef,
         });
+        router.push("/");
       } else {
         setErrorMessage(data.message || "Login failed");
       }
@@ -94,8 +95,17 @@ const useAuth = () => {
         email: emailValue,
         password: passwordValue,
       });
+      // TODO: useRouter for routing to vierfy after createaccount
     }
   };
+
+  // TODO:
+  // {createPost.isPending ? "Submitting..." : "Submit"}
+
+  // <button
+  // type="submit"
+  // className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
+  // disabled={createPost.isPending}
 
   return {
     isSignInForm,

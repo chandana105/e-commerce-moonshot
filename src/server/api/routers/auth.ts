@@ -9,7 +9,7 @@ if (!JWT_SECRET_KEY) {
   throw new Error("SECRET_KEY environment variable is not defined");
 }
 
-export const userRouter = createTRPCRouter({
+export const authRouter = createTRPCRouter({
   // signup procedure
   create: publicProcedure
     .input(
