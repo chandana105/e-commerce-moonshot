@@ -25,7 +25,6 @@ export default {
       },
       borderWidth: {
         "app-border": "1px",
-        // Add other custom border widths here if needed
       },
     },
   },

@@ -1,12 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useUserData from "./useUserData";
+import type { Interest } from "@prisma/client";
 
 const usePaginate = () => {
   const ITEMS_PER_PAGE = 6;
   const [currentPage, setCurrentPage] = useState(0);
+  const [categories, setCategories] = useState<Interest[]>([]);
   const { getCategoriesToDisplay } = useUserData();
 
-  const { data: categories = [], isLoading } = getCategoriesToDisplay;
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data, isLoading } = getCategoriesToDisplay;
+        if (!isLoading && data) {
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [getCategoriesToDisplay]);
 
   const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected);

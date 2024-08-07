@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
-import useGetUser from "../hooks/useUserData";
 import {
   ALREADY_REGISTERED,
   CREATE_ACCOUNT_BUTTON_TEXT,
@@ -16,6 +15,7 @@ import {
   WELCOME_BACK_TO_ECOMMERCE,
 } from "../utils/constants";
 import { useEffect } from "react";
+import useUserData from "../hooks/useUserData";
 
 const Authentication = () => {
   const {
@@ -30,7 +30,9 @@ const Authentication = () => {
     toggleShowPassword,
   } = useAuth();
 
-  const { data, status, error, isLoading } = useGetUser();
+  const { getUserCredentials } = useUserData();
+  const { data, status, error, isLoading } = getUserCredentials;
+
   const router = useRouter();
 
   useEffect(() => {

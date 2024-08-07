@@ -120,7 +120,7 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY) as JwtPayload;
-    const user = { id: decoded.userId }; // Attach the user to context
+    const user = { id: decoded.userId };
     return next({
       ctx: {
         ...ctx,

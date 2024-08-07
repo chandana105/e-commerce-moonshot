@@ -60,7 +60,7 @@ export default function Home() {
         </h2>
         <div className="space-y-4">
           {categoriesToDisplay.map((category, index) => (
-            <CustomCheckbox key={index} category={category} />
+            <CustomCheckbox key={index} category={category} userId={data.id} />
           ))}
         </div>
         <Pagination

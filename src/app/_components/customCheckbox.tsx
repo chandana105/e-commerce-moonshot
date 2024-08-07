@@ -1,17 +1,16 @@
 "use client";
 
 import type { Interest } from "@prisma/client";
-import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
+import useAddInterests from "../hooks/useAddInterests";
 
 interface CustomCheckboxParams {
   category: Interest;
+  userId: number;
 }
 
-const CustomCheckbox = ({ category }: CustomCheckboxParams) => {
-  const [checked, setChecked] = useState(false);
-
-  const handleChange = () => setChecked(!checked);
+const CustomCheckbox = ({ category, userId }: CustomCheckboxParams) => {
+  const { handleChange, checked } = useAddInterests({ userId, category });
 
   return (
     <div className="flex flex-row items-center gap-3" key={category.id}>
