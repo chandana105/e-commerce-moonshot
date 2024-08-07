@@ -1,19 +1,20 @@
 "use client";
 
+import type { Interest } from "@prisma/client";
 import { useState } from "react";
 import { FiCheck } from "react-icons/fi";
 
 interface CustomCheckboxParams {
-  label: string;
+  category: Interest;
 }
 
-const CustomCheckbox = ({ label }: CustomCheckboxParams) => {
+const CustomCheckbox = ({ category }: CustomCheckboxParams) => {
   const [checked, setChecked] = useState(false);
 
   const handleChange = () => setChecked(!checked);
 
   return (
-    <div className="flex flex-row items-center gap-3">
+    <div className="flex flex-row items-center gap-3" key={category.id}>
       <div
         onClick={handleChange}
         className={`flex h-6 w-6 cursor-pointer items-center justify-center rounded ${
@@ -24,7 +25,9 @@ const CustomCheckbox = ({ label }: CustomCheckboxParams) => {
       >
         {checked && <FiCheck className="text-white" size={26} />}
       </div>
-      <p className="text-base font-normal leading-[26px] text-black">{label}</p>
+      <p className="text-base font-normal leading-[26px] text-black">
+        {category.title}
+      </p>
     </div>
   );
 };

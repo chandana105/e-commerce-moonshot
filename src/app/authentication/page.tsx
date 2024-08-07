@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
-import useGetUser from "../hooks/useGetUser";
+import useGetUser from "../hooks/useUserData";
 import {
   ALREADY_REGISTERED,
   CREATE_ACCOUNT_BUTTON_TEXT,

@@ -1,15 +1,21 @@
+"use client";
+
 import { IoSearchOutline } from "react-icons/io5";
 import { FiShoppingCart } from "react-icons/fi";
 import OfferTab from "./offerTab";
+import useUserData from "../hooks/useUserData";
 
 const Header = () => {
+  const { getUserCredentials } = useUserData();
+  const { data: userData, status, error, isLoading } = getUserCredentials;
+
   return (
     <div className="fixed left-0 right-0 top-0 z-50 bg-white">
       <div className="flex h-[100px] w-full flex-col justify-between border-2 px-8 py-3">
         <ul className="flex gap-5 self-end text-sm font-light tracking-wide">
           <li>Help</li>
           <li>Orders & Returns</li>
-          <li>Hi, John</li>
+          {userData && <li>Hi, {userData.name}</li>}
         </ul>
         <div className="grid grid-cols-12 items-center gap-10">
           <h1 className="col-span-2 text-heading font-bold leading-heading-line-height">

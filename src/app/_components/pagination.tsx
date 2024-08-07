@@ -1,3 +1,4 @@
+import type { Interest } from "@prisma/client";
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
@@ -8,7 +9,7 @@ import ReactPaginate from "react-paginate";
 
 interface PaginationProps {
   currentPage: number;
-  mockCategories: string[];
+  categories: Interest[];
   ITEMS_PER_PAGE: number;
   goToFirstPage: () => void;
   goToLastPage: () => void;
@@ -17,12 +18,14 @@ interface PaginationProps {
 
 const Pagination = ({
   currentPage,
-  mockCategories,
+  categories,
   ITEMS_PER_PAGE,
   goToFirstPage,
   goToLastPage,
   handlePageClick,
 }: PaginationProps) => {
+  const totalPages = Math.ceil(categories.length / ITEMS_PER_PAGE);
+
   return (
     <div className="my-12 mt-16 flex items-center justify-start">
       {/* First Page Button */}
@@ -38,7 +41,7 @@ const Pagination = ({
 
       {/* Pagination Controls */}
       <ReactPaginate
-        pageCount={Math.ceil(mockCategories.length / ITEMS_PER_PAGE)}
+        pageCount={totalPages}
         onPageChange={handlePageClick}
         pageRangeDisplayed={7}
         containerClassName="flex items-center justify-center"
@@ -60,12 +63,12 @@ const Pagination = ({
       <button
         onClick={goToLastPage}
         className={`px-1 py-2 ${
-          currentPage === Math.ceil(mockCategories.length / ITEMS_PER_PAGE) - 1
+          currentPage === Math.ceil(categories.length / ITEMS_PER_PAGE) - 1
             ? "cursor-not-allowed opacity-50"
             : ""
         }`}
         disabled={
-          currentPage === Math.ceil(mockCategories.length / ITEMS_PER_PAGE) - 1
+          currentPage === Math.ceil(categories.length / ITEMS_PER_PAGE) - 1
         }
       >
         <MdOutlineKeyboardDoubleArrowRight size={24} />
