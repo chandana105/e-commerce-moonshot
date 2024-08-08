@@ -20,7 +20,7 @@ async function seedInterests() {
 
 seedInterests()
   .then(async () => {
-    console.log("yayy interests created!");
+    console.log("interests created!");
     await prisma.$disconnect();
   })
   .catch((error) => {

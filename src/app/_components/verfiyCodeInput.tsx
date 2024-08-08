@@ -1,13 +1,23 @@
 "use client";
 
+import useFocusInput from "../hooks/useFocusInput";
+
 interface InputParams {
   id: string;
   nextId?: string;
   prevId?: string;
-  label: string;
+  label: string;    
+  value: string;
+  onChange: (value: string) => void;
 }
 
-const VerfiyCodeInput = ({ id, nextId, prevId, label }: InputParams) => {
+const VerfiyCodeInput = ({ id, nextId, prevId, label, value, onChange }: InputParams) => {
+  const inputRef = useFocusInput(nextId, prevId);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
   return (
     <div>
       <label htmlFor={id} className="sr-only">
@@ -16,10 +26,10 @@ const VerfiyCodeInput = ({ id, nextId, prevId, label }: InputParams) => {
       <input
         type="text"
         maxLength={1}
-        data-focus-input-init
-        data-focus-input-prev={prevId}
-        data-focus-input-next={nextId}
+        ref={inputRef}
         id={id}
+        value={value}
+        onChange={handleChange}
         className="h-12 w-[46px] rounded-md border-app-border border-login-border p-3 text-center"
         required
       />

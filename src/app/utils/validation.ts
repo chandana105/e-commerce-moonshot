@@ -1,5 +1,3 @@
-// Update validation functions to always return a string
-
 export const checkEmailAndPassword = (
   email: string,
   password: string,

@@ -18,6 +18,8 @@ model User {
   name        String
   email       String     @unique
   password    String
+  isVerified      Boolean  @default(false)
+  otp         Int?
   interests   Interest[] @relation("UserInterests")
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
