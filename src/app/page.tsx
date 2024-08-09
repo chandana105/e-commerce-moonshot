@@ -29,8 +29,8 @@ export default function Home() {
   const { data, status, error, isLoading } = getUserCredentials;
 
   useEffect(() => {
-    if (!isLoading && !data) {
-      router.push("/authentication");
+    if (!data) {
+      router.push("/login");
     }
   }, [isLoading, data, router]);
 

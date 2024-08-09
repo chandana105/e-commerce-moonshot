@@ -11,7 +11,7 @@ interface InputParams {
   onChange: (value: string) => void;
 }
 
-const VerfiyCodeInput = ({ id, nextId, prevId, label, value, onChange }: InputParams) => {
+const VerifyCodeInput = ({ id, nextId, prevId, label, value, onChange }: InputParams) => {
   const inputRef = useFocusInput(nextId, prevId);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,4 +37,4 @@ const VerfiyCodeInput = ({ id, nextId, prevId, label, value, onChange }: InputPa
   );
 };
 
-export default VerfiyCodeInput;
+export default VerifyCodeInput;

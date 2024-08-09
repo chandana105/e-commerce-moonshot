@@ -5,8 +5,10 @@ import { checkSignUpValidations } from "../utils/validation";
 import { api } from "~/trpc/react";
 import { clearFormFields, errorHandler } from "../utils/helperFunctions";
 import { useRouter } from "next/navigation";
+import { useEmailContext } from "../context/EmailContext";
 
 const useSignup = () => {
+  const { setEmailToBeVerified } = useEmailContext();
   const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
   const fullNameRef = useRef<HTMLInputElement>(null);
@@ -15,13 +17,16 @@ const useSignup = () => {
 
   //  mutation hooks for signup
   const createUser = api.auth.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (response) => {
       clearFormFields({
         fullNameRef,
         emailRef,
         passwordRef,
       });
-      router.push("/verfiy");
+      if (response?.tempUser?.email) {
+        setEmailToBeVerified(response.tempUser.email); 
+      }
+      router.push("/verify");
       setErrorMessage("");
     },
     onError: (error) => {
@@ -48,6 +53,7 @@ const useSignup = () => {
       email: emailValue,
       password: passwordValue,
     });
+    // setErrorMessage("");  TODO: if page got refresehd , the nerorr message also not to show
   };
 
   // TODO:

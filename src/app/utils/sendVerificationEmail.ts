@@ -1,4 +1,3 @@
-// utils/sendVerificationEmail.ts
 import { resend } from "../../helpers/resend";
 import { EmailTemplate } from "../../../emailTemplate/index";
 

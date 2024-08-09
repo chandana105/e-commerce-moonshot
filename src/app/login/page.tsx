@@ -30,7 +30,7 @@ const Login = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && data) {
+    if (data) {
       router.push("/");
     }
   }, [isLoading, data, router]);

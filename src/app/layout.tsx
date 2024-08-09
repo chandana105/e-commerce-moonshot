@@ -5,6 +5,7 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import Header from "./_components/header";
+import EmailProvider from "./context/EmailContext";
 
 export const metadata: Metadata = {
   title: "e-commerce-moonshot",
@@ -19,8 +20,10 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
-          <Header />
-          <main className="flex min-h-screen flex-col pt-36">{children}</main>
+          <EmailProvider>
+            <Header />
+            <main className="flex min-h-screen flex-col pt-36">{children}</main>
+          </EmailProvider>
         </TRPCReactProvider>
       </body>
     </html>

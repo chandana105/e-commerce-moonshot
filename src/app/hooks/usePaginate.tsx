@@ -8,20 +8,14 @@ const usePaginate = () => {
   const [categories, setCategories] = useState<Interest[]>([]);
   const { getCategoriesToDisplay } = useUserData();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { data, isLoading } = getCategoriesToDisplay;
-        if (!isLoading && data) {
-          setCategories(data);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+  const { data, isLoading } = getCategoriesToDisplay;
 
-    fetchCategories();
-  }, [getCategoriesToDisplay]);
+  // todo: to check
+  useEffect(() => {
+    if (!isLoading && data) {
+      setCategories(data);
+    }
+  }, [data, isLoading]);
 
   const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected);

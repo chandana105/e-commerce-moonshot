@@ -1,35 +1,42 @@
 "use client";
 
-import { useState } from "react";
 import {
-  VERFIY_BUTTON_TEXT,
-  VERFIY_HEADING,
+  VERIFY_BUTTON_TEXT,
+  VERIFY_HEADING,
   VERIFY_YOUR_EMAIL,
 } from "~/app/utils/constants";
-import VerfiyCodeInput from "~/app/_components/verfiyCodeInput";
+import VerifyCodeInput from "~/app/_components/verifyCodeInput";
+import useUserData from "../hooks/useUserData";
+import { useRouter } from "next/navigation";
+import useVerifyEmail from "../hooks/useVerifyEmail";
+import { useEmailContext } from "../context/EmailContext";
 
-const AuthVerfiy = () => {
-  const [codeValues, setCodeValues] = useState<string[]>(Array(8).fill(""));
-  const [error, setError] = useState<string | null>(null);
+const AuthVerify = () => {
+  const { getUserCredentials } = useUserData();
+  const { data, isLoading } = getUserCredentials; //TODO: ITS PROTECTRED
 
-  const handleInputChange = (index: number, value: string) => {
-    const newCodeValues = [...codeValues];
-    newCodeValues[index] = value;
-    setCodeValues(newCodeValues);
-  };
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const { codeValues, errorMessage, handleInputChange, handleSubmit } =
+    useVerifyEmail();
 
-    if (codeValues.some((value) => value.trim() === "")) {
-      setError("Please fill the code. All fields are required.");
-      return;
-    }
+  const { emailToBeVerified } = useEmailContext();
 
-    setError(null);
-    // verification process
-    console.log("Verification codes:", codeValues);
-  };
+  console.log({ data }, "input");
+
+  // useEffect(() => {
+  //   if (!data) {
+  //     //not logged in
+  //     router.push("/login");
+  //   } else if (data) {
+  //     //data is there and user is tryinng to access /verify then move to "/"
+  //     router.push("/");
+  //   }
+  // }, [isLoading, data, router]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="relative">
@@ -43,8 +50,8 @@ const AuthVerfiy = () => {
         </h1>
         <p className="mb-5 flex flex-col text-center text-base leading-text-line-height tracking-wider text-black">
           <span className="font-normal">
-            {VERFIY_HEADING}
-            <span className="font-medium">swa***@gmail.com</span>
+            {VERIFY_HEADING}
+            <span className="font-medium">{emailToBeVerified}</span>
           </span>
         </p>
 
@@ -55,7 +62,7 @@ const AuthVerfiy = () => {
 
           <div className="flex flex-row gap-[13px]">
             {Array.from({ length: 8 }, (_, index) => (
-              <VerfiyCodeInput
+              <VerifyCodeInput
                 key={index}
                 id={`code-${index + 1}`}
                 nextId={index === 7 ? undefined : `code-${index + 2}`}
@@ -66,15 +73,15 @@ const AuthVerfiy = () => {
               />
             ))}
           </div>
-          {error && <p className="mt-2 text-red-500">{error}</p>}
+          {errorMessage && <p className="mt-2 text-red-500">{errorMessage}</p>}
         </div>
 
-        <button className="app-button" id="verfiy-submit">
-          {VERFIY_BUTTON_TEXT}
+        <button className="app-button" id="verify-submit">
+          {VERIFY_BUTTON_TEXT}
         </button>
       </form>
     </div>
   );
 };
 
-export default AuthVerfiy;
+export default AuthVerify;

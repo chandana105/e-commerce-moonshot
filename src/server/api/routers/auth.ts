@@ -10,6 +10,8 @@ if (!JWT_SECRET_KEY) {
   throw new Error("SECRET_KEY environment variable is not defined");
 }
 
+const OTP_EXPIRATION_TIME = 15 * 60 * 1000; // 15 minutes in milliseconds
+
 export const authRouter = createTRPCRouter({
   // signup procedure
   create: publicProcedure
@@ -23,44 +25,53 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         // Generating a one-time verification token
-        const otp = Math.floor(10000000 + Math.random() * 90000000); // Generate an 8-digit OTP
+        const otp = Math.floor(10000000 + Math.random() * 90000000); // Generating an 8-digit OTP
 
-        // Performing the transaction
-        const result = await ctx.db.$transaction(async (prisma) => {
-          // Create the new user with unverified email status
-          const newUser = await prisma.user.create({
-            data: {
-              name: input.name,
-              email: input.email,
-              password: await bcrypt.hash(input.password, 10),
-              isVerified: false,
-              otp, // Saving OTP temporarily
-            },
-          });
-
-          // Sending verification email
-          const emailResponse = await sendVerificationEmail({
-            email: input.email,
-            name: input.name,
-            otp,
-          });
-
-          if (!emailResponse.success) {
-            throw new Error(emailResponse.message);
-          }
-
-          // Return the new user if successful
-          return newUser;
+        // Check if the user already exists
+        const existingUser = await ctx.db.user.findUnique({
+          where: { email: input.email },
         });
 
-        return result;
+        if (existingUser) {
+          return {
+            success: false,
+            message: "Email already exists",
+          };
+        }
+        const hashedPassword = await bcrypt.hash(input.password, 10);
+        // Create a temporary user with the OTP
+        const tempUser = await ctx.db.tempUser.create({
+          data: {
+            email: input.email,
+            name: input.name,
+            password: hashedPassword, // Hash the password
+            otp,
+          },
+        });
+
+        // Send the OTP via email
+        const emailResponse = await sendVerificationEmail({
+          email: input.email,
+          name: input.name,
+          otp,
+        });
+
+        if (!emailResponse.success) {
+          throw new Error(emailResponse.message);
+        }
+
+        return {
+          success: true,
+          tempUser: tempUser,
+          message: "OTP sent successfully!",
+        };
       } catch (error) {
         if (error instanceof Error) {
-          console.error("Error creating user:", error.message);
-          throw new Error(error.message || "Failed to create user");
+          console.error("Error creating temp user:", error.message);
+          throw new Error(error.message || "Failed to create temp user");
         } else {
           console.error("Unexpected error:", error);
-          throw new Error("Failed to create user due to unexpected error");
+          throw new Error("Failed to create temp user due to unexpected error");
         }
       }
     }),
@@ -69,30 +80,59 @@ export const authRouter = createTRPCRouter({
   verifyEmail: publicProcedure
     .input(
       z.object({
+        email: z.string().email(),
         otp: z.number(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        // Finding the user by OTP
-        const user = await ctx.db.user.findFirst({
-          where: { otp: input.otp },
+        const currentTime = new Date();
+        console.log(input.email, "email");
+
+        // Find the temporary user with the OTP
+        const tempUser = await ctx.db.tempUser.findFirst({
+          where: {
+            email: input.email,
+            otp: input.otp,
+            otpCreatedAt: {
+              gte: new Date(currentTime.getTime() - OTP_EXPIRATION_TIME),
+            },
+          },
         });
 
-        if (!user) {
-          return { success: false, message: "Invalid OTP" };
+        if (!tempUser) {
+          return { success: false, message: "Invalid or expired OTP" };
         }
 
-        // Updating the user's email verification status with user's unique ID
-        await ctx.db.user.update({
-          where: { id: user.id }, 
-          data: { isVerified: true, otp: null },
+        // Create the main user
+        const newUser = await ctx.db.user.create({
+          data: {
+            email: tempUser.email,
+            name: tempUser.name,
+            password: tempUser.password,
+            isVerified: true, // Set as verified
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            isVerified: true,
+            interests: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        });
+
+        // Delete the temporary user
+        await ctx.db.tempUser.delete({
+          where: { id: tempUser.id },
         });
 
         return {
           success: true,
           message:
-            "Email verified successfully, Kindly Login to access Dashboard. ",
+            "Email verified successfully,New user registered successfully! Kindly Login to access Dashboard",
+          user: newUser,
         };
       } catch (error) {
         console.error("Error verifying email:", error);
@@ -137,3 +177,7 @@ export const authRouter = createTRPCRouter({
       }
     }),
 });
+
+// TODO: TO SHOW /VERFIY ONYL ON SIGNUP AND UNTIL VERIFIED
+// todo: TO SHOW ALL THE ERRROS RECEIVED ON VERFIY , MUTATIONS ON /veify , at errro message , (all messages receiving for msendemailverifcation )
+// TODO: if email succesfully verified , then route to /login or can sghow toaster

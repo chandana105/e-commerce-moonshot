@@ -23,11 +23,11 @@ const CreateAccount = () => {
 
   const { getUserCredentials } = useUserData();
   const { data, status, error, isLoading } = getUserCredentials;
-
+  console.log({ data });
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && data) {
+    if (data) {
       router.push("/");
     }
   }, [isLoading, data, router]);
