@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useLogin";
 import {
-  getToken,
   LOGIN_WELCOME_MESSAGE,
   NEW_ACCOUNT,
   SHOW_PASSWORD,
@@ -31,13 +30,11 @@ const Login = () => {
 
   const router = useRouter();
 
-  const token = getToken();
-
   useEffect(() => {
-    if (data && token) {
+    if (data) {
       router.push("/");
     }
-  }, [isLoading, data, router, token]);
+  }, [isLoading, data, router]);
 
   if (isLoading) {
     return <p>Loading...</p>;
