@@ -17,7 +17,11 @@ body {
 }
 
 .app-button {
-  @apply my-4 w-full whitespace-nowrap rounded-md border-app-border border-black bg-black px-[148px] py-[18px] text-center text-base font-medium uppercase leading-text-line-height tracking-wider text-white;
+  @apply my-4 w-full whitespace-nowrap rounded-md border-app-border border-black bg-black px-[148px] py-[18px] text-center text-base font-medium uppercase leading-text-line-height tracking-wider text-white hover:bg-opacity-80;
+}
+
+.app-button-disabled {
+  @apply cursor-not-allowed bg-opacity-70;
 }
 
 .active a {

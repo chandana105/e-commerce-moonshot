@@ -6,28 +6,33 @@ import { api } from "~/trpc/react";
 import { clearFormFields, errorHandler } from "../utils/helperFunctions";
 import { useRouter } from "next/navigation";
 import { useEmailContext } from "../context/EmailContext";
+import Cookies from "js-cookie";
 
 const useSignup = () => {
   const { setEmailToBeVerified } = useEmailContext();
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const fullNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-
   //  mutation hooks for signup
   const createUser = api.auth.create.useMutation({
     onSuccess: async (response) => {
-      clearFormFields({
-        fullNameRef,
-        emailRef,
-        passwordRef,
-      });
-      if (response?.tempUser?.email) {
-        setEmailToBeVerified(response.tempUser.email); 
+      if (response.success) {
+        clearFormFields({
+          fullNameRef,
+          emailRef,
+          passwordRef,
+        });
+        if (response?.tempUser?.email) {
+          setEmailToBeVerified(response.tempUser.email);
+        }
+        // Cookies.set("isOtpSet", "yes", { expires: 1, path: "/verify" });
+        setErrorMessage("");
+        router.push("/verify");
+      } else {
+        setErrorMessage(response.message || "Create user account failed");
       }
-      router.push("/verify");
-      setErrorMessage("");
     },
     onError: (error) => {
       errorHandler({ error, setErrorMessage });
@@ -53,22 +58,14 @@ const useSignup = () => {
       email: emailValue,
       password: passwordValue,
     });
-    // setErrorMessage("");  TODO: if page got refresehd , the nerorr message also not to show
   };
-
-  // TODO:
-  // {createPost.isPending ? "Submitting..." : "Submit"}
-
-  // <button
-  // type="submit"
-  // className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-  // disabled={createPost.isPending}
 
   return {
     fullNameRef,
     emailRef,
     passwordRef,
     errorMessage,
+    createUser,
     handleButtonClick,
   };
 };

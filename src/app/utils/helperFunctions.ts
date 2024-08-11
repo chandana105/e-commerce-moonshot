@@ -3,6 +3,7 @@ import type { RefObject } from "react";
 
 interface ErrorHandlerParams {
   error: unknown;
+  customMessage?: string;
   setErrorMessage: (message: string) => void;
 }
 
@@ -15,14 +16,19 @@ interface ClearFormFieldsParams {
 export const errorHandler = ({
   error,
   setErrorMessage,
+  customMessage = "", // Default to an empty string if not provided
 }: ErrorHandlerParams) => {
+  let errorMessage = customMessage;
+
   if (error instanceof Error) {
-    setErrorMessage(error.message);
+    errorMessage += ` ${error.message}`;
   } else if (error instanceof TRPCClientError) {
-    setErrorMessage(error.message || "An unexpected error occurred.");
+    errorMessage += ` ${error.message || "An unexpected error occurred."}`;
   } else {
-    setErrorMessage("An unexpected error occurred.");
+    errorMessage += " An unexpected error occurred.";
   }
+
+  setErrorMessage(errorMessage);
 };
 
 export const clearFormFields = ({

@@ -1,14 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
   ALREADY_REGISTERED,
   CREATE_ACCOUNT_BUTTON_TEXT,
+  CREATE_ACCOUNT_BUTTON_TEXT_LOADING,
   LOGIN,
   SIGN_UP_BUTTON_TEXT,
 } from "../utils/constants";
-import { useEffect } from "react";
-import useUserData from "../hooks/useUserData";
+
 import Link from "next/link";
 import useSignup from "../hooks/useSignup";
 
@@ -18,29 +17,17 @@ const CreateAccount = () => {
     emailRef,
     passwordRef,
     errorMessage,
+    createUser,
     handleButtonClick,
   } = useSignup();
-
-  const { getUserCredentials } = useUserData();
-  const { data, status, error, isLoading } = getUserCredentials;
-  console.log({ data });
-  const router = useRouter();
-
-  useEffect(() => {
-    if (data) {
-      router.push("/");
-    }
-  }, [isLoading, data, router]);
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <div className="relative">
       <form
         noValidate
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
         className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
       >
         <h1 className="mb-8 text-center text-heading font-semibold leading-heading-line-height">
@@ -71,16 +58,23 @@ const CreateAccount = () => {
           className="input-text p-3 placeholder-input-color"
         />
 
-        <p className="mb-2 text-sm text-red-600">{errorMessage || null}</p>
-
-        <button className="app-button" onClick={handleButtonClick}>
-          {CREATE_ACCOUNT_BUTTON_TEXT}
+        {errorMessage && (
+          <p className="mb-2 text-sm text-red-600">{errorMessage}</p>
+        )}
+        <button
+          className={`app-button ${createUser.isPending && "app-button-disabled"}`}
+          onClick={handleButtonClick}
+          disabled={createUser.isPending}
+        >
+          {createUser.isPending
+            ? CREATE_ACCOUNT_BUTTON_TEXT_LOADING
+            : CREATE_ACCOUNT_BUTTON_TEXT}
         </button>
 
         <p className="my-10 text-center text-base font-normal leading-text-line-height text-gray-color">
           {ALREADY_REGISTERED}
           <Link href="/login">
-            <span className="cursor-pointer text-base font-bold uppercase">
+            <span className="cursor-pointer text-base font-bold uppercase hover:underline">
               {LOGIN}
             </span>
           </Link>

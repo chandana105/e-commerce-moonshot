@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "~/trpc/react";
 import type { Interest } from "@prisma/client";
 import useUserData from "./useUserData";
+import { errorHandler } from "../utils/helperFunctions";
 
 interface AddInterestsParams {
   userId: number;
@@ -11,11 +12,18 @@ interface AddInterestsParams {
 const useAddInterests = ({ userId, category }: AddInterestsParams) => {
   const [checked, setChecked] = useState(false);
   const { getUserCredentials } = useUserData();
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const utils = api.useUtils();
 
   const addInterestMutation = api.user.addUserInterest.useMutation({
     onError: (error) => {
       console.error("Error adding interest:", error);
+      errorHandler({
+        error,
+        setErrorMessage,
+        customMessage: `Error adding interest:`,
+      });
     },
     onSuccess: async () => {
       await utils.user.invalidate();
@@ -25,6 +33,11 @@ const useAddInterests = ({ userId, category }: AddInterestsParams) => {
   const removeInterestMutation = api.user.removeUserInterest.useMutation({
     onError: (error) => {
       console.error("Error removing interest:", error);
+      errorHandler({
+        error,
+        setErrorMessage,
+        customMessage: `Error removing interest:`,
+      });
     },
     onSuccess: async () => {
       await utils.user.invalidate();
@@ -53,7 +66,7 @@ const useAddInterests = ({ userId, category }: AddInterestsParams) => {
     }
   };
 
-  return { handleChange, checked };
+  return { handleChange, checked, errorMessage };
 };
 
 export default useAddInterests;

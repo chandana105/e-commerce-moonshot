@@ -24,22 +24,12 @@ export default function Home() {
   } = usePaginate();
 
   const { getUserCredentials } = useUserData();
-  const router = useRouter();
 
-  const { data, status, error, isLoading } = getUserCredentials;
+  const { data , error } = getUserCredentials;
 
-  useEffect(() => {
-    if (!data) {
-      router.push("/login");
-    }
-  }, [isLoading, data, router]);
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (!data) {
-    return <p>Redirecting...</p>;
+  if (error) {
+    <p>{error.message}</p>
   }
 
   return (
@@ -58,19 +48,29 @@ export default function Home() {
         <h2 className="py-8 text-xl font-medium leading-[26px] text-black">
           {INTERESTS_SAVED_HEADING}
         </h2>
-        <div className="space-y-4">
-          {categoriesToDisplay.map((category, index) => (
-            <CustomCheckbox key={index} category={category} userId={data.id} />
-          ))}
-        </div>
-        <Pagination
-          currentPage={currentPage}
-          categories={categories}
-          ITEMS_PER_PAGE={ITEMS_PER_PAGE}
-          goToFirstPage={goToFirstPage}
-          goToLastPage={goToLastPage}
-          handlePageClick={handlePageClick}
-        />
+        {data ? (
+          <>
+            <div className="space-y-4">
+              {categoriesToDisplay.map((category, index) => (
+                <CustomCheckbox
+                  key={index}
+                  category={category}
+                  userId={data.id}
+                />
+              ))}
+            </div>
+            <Pagination
+              currentPage={currentPage}
+              categories={categories}
+              ITEMS_PER_PAGE={ITEMS_PER_PAGE}
+              goToFirstPage={goToFirstPage}
+              goToLastPage={goToLastPage}
+              handlePageClick={handlePageClick}
+            />
+          </>
+        ) : (
+          <p>loading...</p>
+        )}
       </form>
     </div>
   );

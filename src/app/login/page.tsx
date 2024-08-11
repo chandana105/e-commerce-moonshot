@@ -1,17 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import useAuth from "../hooks/useLogin";
+import useLogin from "../hooks/useLogin";
 import {
   LOGIN_WELCOME_MESSAGE,
   NEW_ACCOUNT,
   SHOW_PASSWORD,
   SIGN_IN_BUTTON_TEXT,
+  SIGN_IN_BUTTON_TEXT_LOADING,
   SIGN_UP,
   WELCOME_BACK_TO_ECOMMERCE,
 } from "../utils/constants";
-import { useEffect } from "react";
-import useUserData from "../hooks/useUserData";
 import Link from "next/link";
 
 const Login = () => {
@@ -20,25 +18,10 @@ const Login = () => {
     passwordRef,
     errorMessage,
     showPassword,
+    loginUser,
     handleButtonClick,
     toggleShowPassword,
-    loginUser,
-  } = useAuth();
-
-  const { getUserCredentials } = useUserData();
-  const { data, status, error, isLoading } = getUserCredentials;
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (data) {
-      router.push("/");
-    }
-  }, [isLoading, data, router]);
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+  } = useLogin();
 
   return (
     <div className="relative">
@@ -46,7 +29,6 @@ const Login = () => {
         noValidate
         onSubmit={(e) => {
           e.preventDefault();
-          router.push("/");
         }}
         className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
       >
@@ -70,6 +52,8 @@ const Login = () => {
           placeholder="Enter Email Address"
           className="input-text p-3 placeholder-input-color"
         />
+        {/* TODO: */}
+        <p>chandanamj325@gmail.com</p>
 
         <label className="label">Password</label>
 
@@ -87,15 +71,20 @@ const Login = () => {
             {SHOW_PASSWORD}
           </button>
         </div>
+        <p>123Qwerty</p>
 
-        <p className="mb-2 text-sm text-red-600">{errorMessage || null}</p>
+        {errorMessage && (
+          <p className="mb-2 text-sm text-red-600">{errorMessage}</p>
+        )}
 
         <button
-          className="app-button"
+          className={`app-button ${loginUser.isPending && "app-button-disabled"}`}
           onClick={handleButtonClick}
           disabled={loginUser.isPending}
         >
-          {loginUser.isPending ? "Login....." : SIGN_IN_BUTTON_TEXT}
+          {loginUser.isPending
+            ? SIGN_IN_BUTTON_TEXT_LOADING
+            : SIGN_IN_BUTTON_TEXT}
         </button>
 
         <div className="mb-2 mt-4 h-[1px] w-full bg-login-border"></div>
@@ -103,7 +92,7 @@ const Login = () => {
         <p className="my-10 text-center text-base font-normal leading-text-line-height text-gray-color">
           {NEW_ACCOUNT}
           <Link href="/signup">
-            <span className="cursor-pointer text-base font-bold uppercase">
+            <span className="cursor-pointer text-base font-bold uppercase hover:underline">
               {SIGN_UP}
             </span>
           </Link>

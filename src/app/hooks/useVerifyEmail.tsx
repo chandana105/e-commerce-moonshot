@@ -3,6 +3,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 import { errorHandler } from "../utils/helperFunctions";
 import { useEmailContext } from "../context/EmailContext";
+import Cookies from "js-cookie";
 
 const useVerifyEmail = () => {
   const [codeValues, setCodeValues] = useState<string[]>(Array(8).fill(""));
@@ -10,14 +11,19 @@ const useVerifyEmail = () => {
   const router = useRouter();
   const { emailToBeVerified } = useEmailContext();
 
+  if (!emailToBeVerified) {
+    console.log("no email");
+  }
+
   const verifyEmail = api.auth.verifyEmail.useMutation({
     onSuccess: (response) => {
       if (response.success) {
         // Clear the code fields
         setCodeValues(Array(8).fill(""));
-
+        // Remove the OTP flag as the user is now verified
+        // Cookies.remove("isOtpSet");
         // Redirect to login page
-        router.push("/login");
+        // router.push("/login");
 
         // Clear any previous error message
         setErrorMessage("");
@@ -62,12 +68,16 @@ const useVerifyEmail = () => {
     setErrorMessage(null);
 
     // Call the verification mutation
-    if (emailToBeVerified) {
-      verifyEmail.mutate({ email: emailToBeVerified, otp });
-    }
+    verifyEmail.mutate({ email: emailToBeVerified as string, otp });
   };
 
-  return { codeValues, errorMessage, handleInputChange, handleSubmit };
+  return {
+    codeValues,
+    errorMessage,
+    verifyEmail,
+    handleInputChange,
+    handleSubmit,
+  };
 };
 
 export default useVerifyEmail;

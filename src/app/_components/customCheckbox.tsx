@@ -10,7 +10,10 @@ interface CustomCheckboxParams {
 }
 
 const CustomCheckbox = ({ category, userId }: CustomCheckboxParams) => {
-  const { handleChange, checked } = useAddInterests({ userId, category });
+  const { handleChange, checked, errorMessage } = useAddInterests({
+    userId,
+    category,
+  });
 
   return (
     <div className="flex flex-row items-center gap-3" key={category.id}>
@@ -27,6 +30,7 @@ const CustomCheckbox = ({ category, userId }: CustomCheckboxParams) => {
       <p className="text-base font-normal leading-[26px] text-black">
         {category.title}
       </p>
+      <p className="text-red-600">{errorMessage && errorMessage}</p>
     </div>
   );
 };

@@ -2,47 +2,35 @@
 
 import {
   VERIFY_BUTTON_TEXT,
+  VERIFY_BUTTON_TEXT_LOADING,
   VERIFY_HEADING,
   VERIFY_YOUR_EMAIL,
 } from "~/app/utils/constants";
 import VerifyCodeInput from "~/app/_components/verifyCodeInput";
-import useUserData from "../hooks/useUserData";
-import { useRouter } from "next/navigation";
 import useVerifyEmail from "../hooks/useVerifyEmail";
 import { useEmailContext } from "../context/EmailContext";
+import { useRouter } from "next/navigation";
 
 const AuthVerify = () => {
-  const { getUserCredentials } = useUserData();
-  const { data, isLoading } = getUserCredentials; //TODO: ITS PROTECTRED
+  const {
+    codeValues,
+    errorMessage,
+    verifyEmail,
+    handleInputChange,
+    handleSubmit,
+  } = useVerifyEmail();
 
+  const { emailToBeVerified } = useEmailContext(); //TODO: HERE
   const router = useRouter();
-
-  const { codeValues, errorMessage, handleInputChange, handleSubmit } =
-    useVerifyEmail();
-
-  const { emailToBeVerified } = useEmailContext();
-
-  console.log({ data }, "input");
-
-  // useEffect(() => {
-  //   if (!data) {
-  //     //not logged in
-  //     router.push("/login");
-  //   } else if (data) {
-  //     //data is there and user is tryinng to access /verify then move to "/"
-  //     router.push("/");
-  //   }
-  // }, [isLoading, data, router]);
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <div className="relative">
       <form
         noValidate
-        onSubmit={handleSubmit}
+        onSubmit={() => {
+          handleSubmit;
+          router.push("/login");
+        }}
         className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
       >
         <h1 className="mb-8 text-center text-heading font-semibold leading-heading-line-height text-black">
@@ -76,8 +64,14 @@ const AuthVerify = () => {
           {errorMessage && <p className="mt-2 text-red-500">{errorMessage}</p>}
         </div>
 
-        <button className="app-button" id="verify-submit">
-          {VERIFY_BUTTON_TEXT}
+        <button
+          className={`app-button ${verifyEmail.isPending && "app-button-disabled"}`}
+          id="verify-submit"
+          disabled={verifyEmail.isPending}
+        >
+          {verifyEmail.isPending
+            ? VERIFY_BUTTON_TEXT_LOADING
+            : VERIFY_BUTTON_TEXT}
         </button>
       </form>
     </div>
