@@ -27,7 +27,8 @@ const useSignup = () => {
         if (response?.tempUser?.email) {
           setEmailToBeVerified(response.tempUser.email);
         }
-        // Cookies.set("isOtpSet", "yes", { expires: 1, path: "/verify" });
+        // Set the cookie to indicate that OTP is set
+        Cookies.set("isOtpSet", "yes", { expires: 15 / 1440, path: "/" });
         setErrorMessage("");
         router.push("/verify");
       } else {

@@ -9,7 +9,6 @@ import {
 import VerifyCodeInput from "~/app/_components/verifyCodeInput";
 import useVerifyEmail from "../hooks/useVerifyEmail";
 import { useEmailContext } from "../context/EmailContext";
-import { useRouter } from "next/navigation";
 
 const AuthVerify = () => {
   const {
@@ -21,15 +20,14 @@ const AuthVerify = () => {
   } = useVerifyEmail();
 
   const { emailToBeVerified } = useEmailContext(); //TODO: HERE
-  const router = useRouter();
 
   return (
     <div className="relative">
       <form
         noValidate
-        onSubmit={() => {
-          handleSubmit;
-          router.push("/login");
+        onSubmit={(e) => {
+          // handleSubmit;
+          e.preventDefault();
         }}
         className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
       >
@@ -68,6 +66,7 @@ const AuthVerify = () => {
           className={`app-button ${verifyEmail.isPending && "app-button-disabled"}`}
           id="verify-submit"
           disabled={verifyEmail.isPending}
+          onClick={handleSubmit}
         >
           {verifyEmail.isPending
             ? VERIFY_BUTTON_TEXT_LOADING

@@ -21,10 +21,11 @@ const useVerifyEmail = () => {
         // Clear the code fields
         setCodeValues(Array(8).fill(""));
         // Remove the OTP flag as the user is now verified
-        // Cookies.remove("isOtpSet");
-        // Redirect to login page
-        // router.push("/login");
 
+        Cookies.remove("isOtpSet", { path: "/" });
+
+        // Redirect to login page
+        router.push("/login");
         // Clear any previous error message
         setErrorMessage("");
       } else {
