@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useLogin";
 import {
+  getToken,
   LOGIN_WELCOME_MESSAGE,
   NEW_ACCOUNT,
   SHOW_PASSWORD,
@@ -22,6 +23,7 @@ const Login = () => {
     showPassword,
     handleButtonClick,
     toggleShowPassword,
+    loginUser,
   } = useAuth();
 
   const { getUserCredentials } = useUserData();
@@ -29,11 +31,13 @@ const Login = () => {
 
   const router = useRouter();
 
+  const token = getToken();
+
   useEffect(() => {
-    if (data) {
+    if (data && token) {
       router.push("/");
     }
-  }, [isLoading, data, router]);
+  }, [isLoading, data, router, token]);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -43,7 +47,10 @@ const Login = () => {
     <div className="relative">
       <form
         noValidate
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={(e) => {
+          e.preventDefault();
+          router.push("/");
+        }}
         className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
       >
         <h1 className="mb-8 text-center text-heading font-semibold leading-heading-line-height">
@@ -86,8 +93,12 @@ const Login = () => {
 
         <p className="mb-2 text-sm text-red-600">{errorMessage || null}</p>
 
-        <button className="app-button" onClick={handleButtonClick}>
-          {SIGN_IN_BUTTON_TEXT}
+        <button
+          className="app-button"
+          onClick={handleButtonClick}
+          disabled={loginUser.isPending}
+        >
+          {loginUser.isPending ? "Login....." : SIGN_IN_BUTTON_TEXT}
         </button>
 
         <div className="mb-2 mt-4 h-[1px] w-full bg-login-border"></div>

@@ -22,11 +22,11 @@ const useAuth = () => {
           emailRef,
           passwordRef,
         });
-        router.push("/");
       } else {
         setErrorMessage(data.message || "Login failed");
       }
     },
+
     onError: (error) => {
       errorHandler({ error, setErrorMessage });
     },
@@ -70,6 +70,7 @@ const useAuth = () => {
     showPassword,
     handleButtonClick,
     toggleShowPassword,
+    loginUser,
   };
 };
 
