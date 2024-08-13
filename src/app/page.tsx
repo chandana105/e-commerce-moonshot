@@ -2,15 +2,17 @@
 
 import usePaginate from "./hooks/usePaginate";
 import {
+  getToken,
   INTERESTS_HEADING,
   INTERESTS_SAVED_HEADING,
   INTERESTS_SUB_HEADING,
 } from "./utils/constants";
 import CustomCheckbox from "./_components/customCheckbox";
 import Pagination from "./_components/pagination";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+
 import useUserData from "./hooks/useUserData";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   const {
@@ -25,11 +27,20 @@ export default function Home() {
 
   const { getUserCredentials } = useUserData();
 
-  const { data , error } = getUserCredentials;
+  const { data, error } = getUserCredentials;
 
+  const router = useRouter();
+
+  // Redirect to login if not authenticated in case of browser back button
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      router.push("/login");
+    }
+  }, [router]);
 
   if (error) {
-    <p>{error.message}</p>
+    <p>{error.message}</p>;
   }
 
   return (
@@ -37,7 +48,7 @@ export default function Home() {
       <form
         noValidate
         onSubmit={(e) => e.preventDefault()}
-        className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
+        className="absolute left-0 right-0 m-8 mx-auto w-[90%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black md:w-[38%]"
       >
         <h1 className="mb-8 text-center text-heading font-semibold leading-heading-line-height text-black">
           {INTERESTS_HEADING}

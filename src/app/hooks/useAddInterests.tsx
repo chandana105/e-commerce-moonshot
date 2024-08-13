@@ -13,6 +13,7 @@ const useAddInterests = ({ userId, category }: AddInterestsParams) => {
   const [checked, setChecked] = useState(false);
   const { getUserCredentials } = useUserData();
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const utils = api.useUtils();
 
@@ -45,7 +46,6 @@ const useAddInterests = ({ userId, category }: AddInterestsParams) => {
   });
 
   // Fetch user data to set initial checkbox state
-
   const { data: userData, isLoading: userLoading } = getUserCredentials;
 
   useEffect(() => {
@@ -57,16 +57,44 @@ const useAddInterests = ({ userId, category }: AddInterestsParams) => {
 
   const handleChange = () => {
     const newChecked = !checked;
-    setChecked(newChecked);
 
     if (newChecked) {
       addInterestMutation.mutate({ userId, interestId: category.id });
+      setChecked(newChecked);
     } else {
       removeInterestMutation.mutate({ userId, interestId: category.id });
+      setChecked(newChecked);
     }
   };
 
-  return { handleChange, checked, errorMessage };
+  useEffect(() => {
+    if (addInterestMutation.isPending || removeInterestMutation.isPending) {
+      setLoading(true);
+    } else if (
+      addInterestMutation.isSuccess ||
+      removeInterestMutation.isSuccess
+    ) {
+      setLoading(false);
+    } else if (addInterestMutation.isError || removeInterestMutation.isError) {
+      setLoading(false);
+    }
+  }, [
+    addInterestMutation.isPending,
+    removeInterestMutation.isPending,
+    addInterestMutation.isSuccess,
+    removeInterestMutation.isSuccess,
+    addInterestMutation.isError,
+    removeInterestMutation.isError,
+  ]);
+
+  return {
+    handleChange,
+    loading,
+    checked,
+    errorMessage,
+    addInterestMutation,
+    removeInterestMutation,
+  };
 };
 
 export default useAddInterests;

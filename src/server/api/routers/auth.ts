@@ -87,7 +87,6 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const currentTime = new Date();
-        console.log(input.email, "email");
 
         // Find the temporary user with the OTP
         const tempUser = await ctx.db.tempUser.findFirst({
@@ -177,7 +176,3 @@ export const authRouter = createTRPCRouter({
       }
     }),
 });
-
-// TODO: TO SHOW /VERFIY ONYL ON SIGNUP AND UNTIL VERIFIED
-// todo: TO SHOW ALL THE ERRROS RECEIVED ON VERFIY , MUTATIONS ON /veify , at errro message , (all messages receiving for msendemailverifcation )
-// TODO: if email succesfully verified , then route to /login or can sghow toaster

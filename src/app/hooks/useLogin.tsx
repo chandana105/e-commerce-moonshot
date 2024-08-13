@@ -6,6 +6,7 @@ import { api } from "~/trpc/react";
 import { clearFormFields, errorHandler } from "../utils/helperFunctions";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import Toaster from "../utils/toaster";
 
 const useLogin = () => {
   const router = useRouter();
@@ -25,13 +26,16 @@ const useLogin = () => {
           passwordRef,
         });
         router.push("/");
+        Toaster({ message: "Login successful", type: "success" });
       } else {
         setErrorMessage(data.message || "Login failed");
+        Toaster({ message: "Login failed", type: "error" });
       }
     },
 
     onError: (error) => {
       errorHandler({ error, setErrorMessage });
+      Toaster({ message: "Login failed", type: "error" });
     },
   });
 

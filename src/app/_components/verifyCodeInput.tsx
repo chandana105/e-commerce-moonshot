@@ -30,7 +30,7 @@ const VerifyCodeInput = ({ id, nextId, prevId, label, value, onChange }: InputPa
         id={id}
         value={value}
         onChange={handleChange}
-        className="h-12 w-[46px] rounded-md border-app-border border-login-border p-3 text-center"
+        className="h-12 w-9 md:w-[46px] rounded-md border-app-border border-login-border p-3 text-center"
         required
       />
     </div>

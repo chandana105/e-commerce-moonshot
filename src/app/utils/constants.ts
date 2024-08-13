@@ -23,5 +23,9 @@ export const INTERESTS_SUB_HEADING = "We will keep you notified.";
 export const INTERESTS_SAVED_HEADING = "My saved interests!";
 
 export const getToken = () => {
-  return Cookies.get("authToken"); // Retrieve token from cookies
+  return Cookies.get("authToken");
+};
+
+export const getVerifyToken = () => {
+  return Cookies.get("isOtpSet");
 };

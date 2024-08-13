@@ -16,7 +16,7 @@ interface ClearFormFieldsParams {
 export const errorHandler = ({
   error,
   setErrorMessage,
-  customMessage = "", // Default to an empty string if not provided
+  customMessage = "",
 }: ErrorHandlerParams) => {
   let errorMessage = customMessage;
 
@@ -37,7 +37,7 @@ export const clearFormFields = ({
   passwordRef,
 }: ClearFormFieldsParams) => {
   if (fullNameRef?.current) {
-    fullNameRef.current.value = ""; //TODO: NULL ?
+    fullNameRef.current.value = "";
   }
   if (emailRef?.current) {
     emailRef.current.value = "";
@@ -45,4 +45,15 @@ export const clearFormFields = ({
   if (passwordRef?.current) {
     passwordRef.current.value = "";
   }
+};
+
+export const maskEmail = (email: string): string => {
+  const parts = email.split("@");
+  if (parts.length !== 2) return email; // Return the original email if it's not in the correct format
+
+  const [localPart, domain] = parts;
+  if (!localPart || !domain) return email; // Checking if localPart or domain are undefined
+
+  const maskedLocalPart = localPart.slice(0, 3) + "***"; // Mask part of the local part
+  return `${maskedLocalPart}@${domain}`;
 };

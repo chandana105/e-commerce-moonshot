@@ -1,7 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import useLogin from "../hooks/useLogin";
 import {
+  getToken,
   LOGIN_WELCOME_MESSAGE,
   NEW_ACCOUNT,
   SHOW_PASSWORD,
@@ -11,6 +13,7 @@ import {
   WELCOME_BACK_TO_ECOMMERCE,
 } from "../utils/constants";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const Login = () => {
   const {
@@ -23,6 +26,16 @@ const Login = () => {
     toggleShowPassword,
   } = useLogin();
 
+  const router = useRouter();
+
+  // Redirect to login if not authenticated in case of browser back button
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      router.push("/");
+    }
+  }, [router]);
+
   return (
     <div className="relative">
       <form
@@ -30,7 +43,7 @@ const Login = () => {
         onSubmit={(e) => {
           e.preventDefault();
         }}
-        className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
+        className="absolute left-0 right-0 m-8 mx-auto w-[90%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black md:w-[38%]"
       >
         <h1 className="mb-8 text-center text-heading font-semibold leading-heading-line-height">
           {SIGN_IN_BUTTON_TEXT}
@@ -52,8 +65,6 @@ const Login = () => {
           placeholder="Enter Email Address"
           className="input-text p-3 placeholder-input-color"
         />
-        {/* TODO: */}
-        <p>chandanamj325@gmail.com</p>
 
         <label className="label">Password</label>
 
@@ -71,7 +82,6 @@ const Login = () => {
             {SHOW_PASSWORD}
           </button>
         </div>
-        <p>123Qwerty</p>
 
         {errorMessage && (
           <p className="mb-2 text-sm text-red-600">{errorMessage}</p>
@@ -103,3 +113,7 @@ const Login = () => {
 };
 
 export default Login;
+
+/**
+ * todo: setting up domain for mails
+ */

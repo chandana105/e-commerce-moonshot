@@ -6,6 +6,9 @@ import { type Metadata } from "next";
 import { TRPCReactProvider } from "~/trpc/react";
 import Header from "./_components/header";
 import EmailProvider from "./context/EmailContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ClientLayout from "./clientLayout";
 
 export const metadata: Metadata = {
   title: "e-commerce-moonshot",
@@ -22,7 +25,8 @@ export default function RootLayout({
         <TRPCReactProvider>
           <EmailProvider>
             <Header />
-            <main className="flex min-h-screen flex-col pt-36">{children}</main>
+            <ClientLayout>{children}</ClientLayout>
+            <ToastContainer />
           </EmailProvider>
         </TRPCReactProvider>
       </body>

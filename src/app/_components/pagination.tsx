@@ -27,7 +27,7 @@ const Pagination = ({
   const totalPages = Math.ceil(categories.length / ITEMS_PER_PAGE);
 
   return (
-    <div className="my-12 mt-16 flex items-center justify-start">
+    <div className="my-12 mt-16 flex flex-wrap items-center justify-start">
       {/* First Page Button */}
       <button
         onClick={goToFirstPage}
@@ -44,7 +44,7 @@ const Pagination = ({
         pageCount={totalPages}
         onPageChange={handlePageClick}
         pageRangeDisplayed={7}
-        containerClassName="flex items-center justify-center"
+        containerClassName="flex items-center justify-center flex-wrap"
         pageClassName="mx-1 text-base"
         pageLinkClassName="px-1 py-2 text-gray-500"
         previousLabel={<MdOutlineKeyboardArrowLeft size={24} />}

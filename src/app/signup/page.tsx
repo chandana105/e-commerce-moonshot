@@ -4,12 +4,15 @@ import {
   ALREADY_REGISTERED,
   CREATE_ACCOUNT_BUTTON_TEXT,
   CREATE_ACCOUNT_BUTTON_TEXT_LOADING,
+  getToken,
   LOGIN,
   SIGN_UP_BUTTON_TEXT,
 } from "../utils/constants";
 
 import Link from "next/link";
 import useSignup from "../hooks/useSignup";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const CreateAccount = () => {
   const {
@@ -21,6 +24,16 @@ const CreateAccount = () => {
     handleButtonClick,
   } = useSignup();
 
+  const router = useRouter();
+
+  // Redirect to login if not authenticated in case of browser back button
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      router.push("/");
+    }
+  }, [router]);
+
   return (
     <div className="relative">
       <form
@@ -28,7 +41,7 @@ const CreateAccount = () => {
         onSubmit={(e) => {
           e.preventDefault();
         }}
-        className="absolute left-0 right-0 m-8 mx-auto w-[38%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black"
+        className="absolute left-0 right-0 m-8 mx-auto w-[90%] rounded-[20px] border-app-border border-login-border bg-white px-14 py-8 text-black md:w-[38%]"
       >
         <h1 className="mb-8 text-center text-heading font-semibold leading-heading-line-height">
           {SIGN_UP_BUTTON_TEXT}

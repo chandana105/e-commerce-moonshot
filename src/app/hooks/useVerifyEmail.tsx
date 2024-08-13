@@ -4,6 +4,7 @@ import { api } from "~/trpc/react";
 import { errorHandler } from "../utils/helperFunctions";
 import { useEmailContext } from "../context/EmailContext";
 import Cookies from "js-cookie";
+import Toaster from "../utils/toaster";
 
 const useVerifyEmail = () => {
   const [codeValues, setCodeValues] = useState<string[]>(Array(8).fill(""));
@@ -28,16 +29,22 @@ const useVerifyEmail = () => {
         router.push("/login");
         // Clear any previous error message
         setErrorMessage("");
+        Toaster({ message: "User verified successfully", type: "success" });
       } else {
         // Handle the specific error message from the response
         setErrorMessage(
           response.message || "Verification failed. Please try again.",
         );
+        Toaster({ message: response.message, type: "error" });
       }
     },
     onError: (error) => {
       // Handle the error
       errorHandler({ error, setErrorMessage });
+      Toaster({
+        message: `Error verifying the user: ${error.message}`,
+        type: "error",
+      });
     },
   });
 

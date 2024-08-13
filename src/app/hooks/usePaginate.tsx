@@ -10,7 +10,6 @@ const usePaginate = () => {
 
   const { data, isLoading } = getCategoriesToDisplay;
 
-  // todo: to check
   useEffect(() => {
     if (!isLoading && data) {
       setCategories(data);

@@ -7,6 +7,7 @@ import { clearFormFields, errorHandler } from "../utils/helperFunctions";
 import { useRouter } from "next/navigation";
 import { useEmailContext } from "../context/EmailContext";
 import Cookies from "js-cookie";
+import Toaster from "../utils/toaster";
 
 const useSignup = () => {
   const { setEmailToBeVerified } = useEmailContext();
@@ -15,6 +16,7 @@ const useSignup = () => {
   const fullNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
   //  mutation hooks for signup
   const createUser = api.auth.create.useMutation({
     onSuccess: async (response) => {
@@ -31,12 +33,15 @@ const useSignup = () => {
         Cookies.set("isOtpSet", "yes", { expires: 15 / 1440, path: "/" });
         setErrorMessage("");
         router.push("/verify");
+        Toaster({ message: "Signup successful", type: "success" });
       } else {
         setErrorMessage(response.message || "Create user account failed");
+        Toaster({ message: "Signup failed", type: "error" });
       }
     },
     onError: (error) => {
       errorHandler({ error, setErrorMessage });
+      Toaster({ message: "Signup failed", type: "error" });
     },
   });
 
