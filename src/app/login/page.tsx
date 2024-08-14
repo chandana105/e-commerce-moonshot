@@ -113,7 +113,3 @@ const Login = () => {
 };
 
 export default Login;
-
-/**
- * todo: setting up domain for mails
- */
