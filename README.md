@@ -1,6 +1,6 @@
-# Roc8-Moonshot Fullstack Assingment
+# Roc8-Moonshot Fullstack Assignment
 
-This is a Roc8-Moonshot Fullstack Assingment. The application is built using Next.js, TypeScript, Tailwind CSS, tRPC, Prisma and PostgreSQL (NeonDB), using create t3-app and is deployed on Vercel.
+This is a Roc8-Moonshot Fullstack Assignment. The application is built using Next.js, TypeScript, TailwindCSS, tRPC, Prisma and PostgreSQL (NeonDB), using create t3-app and is deployed on Vercel.
 
 ## Features
 
@@ -10,7 +10,7 @@ This is a Roc8-Moonshot Fullstack Assingment. The application is built using Nex
 
 ## Tech Stack
 
-- **Frontend**: Next.js, TypeScript, Tailwind CSS
+- **Frontend**: Next.js, TypeScript, TailwindCSS
 - **Backend**: tRPC API Routes, Prisma ORM
 - **Database**: PostgreSQL (NeonDB)
 - **Deployment**: Vercel
