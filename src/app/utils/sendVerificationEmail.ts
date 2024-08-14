@@ -14,7 +14,7 @@ export async function sendVerificationEmail({
 }: sendVerificationEmailParams) {
   try {
     const { data } = await resend.emails.send({
-      from: "OTP <onboarding@resend.dev>",
+      from: "OTP <ecommerce_moonshot_roc8@coderdevhub.in>",
       to: email,
       subject: "E-commerce Roc8 | Verification OTP ",
       react: EmailTemplate({ name, email, otp }),
