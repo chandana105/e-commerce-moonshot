@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jacquard+12&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+body {
+  @apply font-inter;
+}
+
+.label {
+  @apply text-base font-normal leading-text-line-height text-black;
+}
+
+.input-text {
+  @apply mb-4 mt-1 w-full rounded-md border-app-border border-login-border bg-white text-base font-normal leading-text-line-height text-input-color;
+}
+
+.app-button {
+  @apply my-4 w-full whitespace-nowrap rounded-md border-app-border border-black bg-black px-[148px] py-[18px] text-center text-base font-medium uppercase leading-text-line-height tracking-wider text-white hover:bg-opacity-80;
+}
+
+.app-button-disabled {
+  @apply cursor-not-allowed bg-opacity-70;
+}
+
+.active a {
+  color: black !important;
+  font-weight: bold !important;
+}

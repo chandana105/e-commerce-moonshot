@@ -6,11 +6,22 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "~/server/db";
+import jwt from "jsonwebtoken";
+
+interface JwtPayload {
+  userId: number;
+}
+
+const JWT_SECRET_KEY = process.env.SECRET_KEY;
+
+if (!JWT_SECRET_KEY) {
+  throw new Error("SECRET_KEY environment variable is not defined");
+}
 
 /**
  * 1. CONTEXT
@@ -96,6 +107,31 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
+const authMiddleware = t.middleware(async ({ ctx, next }) => {
+  const authorizationHeader = ctx.headers.get("authorization");
+  if (!authorizationHeader) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "No token provided" });
+  }
+
+  const token = authorizationHeader.split(" ")[1];
+  if (!token) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Malformed token" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET_KEY) as JwtPayload;
+    const user = { id: decoded.userId };
+    return next({
+      ctx: {
+        ...ctx,
+        user,
+      },
+    });
+  } catch (err) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });
+  }
+});
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -103,4 +139,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
+
 export const publicProcedure = t.procedure.use(timingMiddleware);
+// Protected Procedure
+export const protectedProcedure = t.procedure.use(authMiddleware);
