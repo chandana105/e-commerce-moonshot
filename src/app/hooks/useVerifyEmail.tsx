@@ -13,7 +13,7 @@ const useVerifyEmail = () => {
   const { emailToBeVerified } = useEmailContext();
 
   if (!emailToBeVerified) {
-    console.log("no email");
+    console.log("No email to be verified");
   }
 
   const verifyEmail = api.auth.verifyEmail.useMutation({
@@ -22,7 +22,6 @@ const useVerifyEmail = () => {
         // Clear the code fields
         setCodeValues(Array(8).fill(""));
         // Remove the OTP flag as the user is now verified
-
         Cookies.remove("isOtpSet", { path: "/" });
 
         // Redirect to login page
@@ -33,7 +32,7 @@ const useVerifyEmail = () => {
       } else {
         // Handle the specific error message from the response
         setErrorMessage(
-          response.message || "Verification failed. Please try again.",
+          response.message || "Verification failed. Please try again."
         );
         Toaster({ message: response.message, type: "error" });
       }
@@ -76,7 +75,7 @@ const useVerifyEmail = () => {
     setErrorMessage(null);
 
     // Call the verification mutation
-    verifyEmail.mutate({ email: emailToBeVerified as string, otp });
+    verifyEmail.mutate({ email: emailToBeVerified!, otp }); // Use non-null assertion
   };
 
   return {
